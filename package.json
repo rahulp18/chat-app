@@ -1,0 +1,19 @@
+{
+  "name": "compare_price",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "packageManager": "yarn@1.22.22",
+  "scripts": {
+    "dev:frontend": "cd apps/frontend && yarn dev",
+    "dev:server": "cd apps/server && yarn start:dev",
+    "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:server\"",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "turbo": "^2.0.9"
+  }
+}
