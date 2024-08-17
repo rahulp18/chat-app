@@ -1,4 +1,5 @@
-import React, { forwardRef } from "react";
+"use client";
+import React, { forwardRef, useEffect, useState } from "react";
 
 const Message = forwardRef<
   HTMLDivElement,
@@ -10,10 +11,15 @@ const Message = forwardRef<
   }
 >(({ message, currentUserId, participants, isGroup }, ref) => {
   const isOwnMessage = message.senderId === currentUserId;
-  const sender = participants.find(
-    (participant: any) => participant.id === message.senderId
-  );
-  const senderName = sender ? sender.name : "Unknown";
+  const [sender, setSender] = useState<string>("");
+
+  useEffect(() => {
+    const data = participants.find(
+      (participant: any) => participant.userId === message.senderId
+    );
+
+    setSender(data ? data.user.fullname : "Unknown");
+  }, [participants, message]);
 
   return (
     <div
@@ -24,7 +30,7 @@ const Message = forwardRef<
       {!isOwnMessage && isGroup && (
         <div className="flex items-center mr-2">
           <div className="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-            {senderName.charAt(0).toUpperCase()}
+            {sender && sender.charAt(0).toUpperCase()}
           </div>
         </div>
       )}
@@ -37,9 +43,7 @@ const Message = forwardRef<
         }`}
       >
         {!isOwnMessage && isGroup && (
-          <div className="text-sm font-bold text-gray-700 mb-1">
-            {senderName}
-          </div>
+          <div className="text-sm font-bold text-gray-700 mb-1">{sender}</div>
         )}
         {message.content}
       </div>

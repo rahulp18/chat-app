@@ -30,5 +30,15 @@ type ApiResponse = {
   message?: string;
   data: any;
 };
+type Message = {
+  id: string;
+  content: string;
+  senderId: string;
+  chatId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  sender: User;
+  chat: Chat;
+};
 
-export type { Chat, Participant, User, ApiResponse };
+export type { Chat, Participant, User, ApiResponse, Message };

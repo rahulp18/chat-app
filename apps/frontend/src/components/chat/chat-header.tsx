@@ -37,7 +37,7 @@ const ChatHeader = async ({ chatInfo }: Props) => {
           size={22}
           className="text-gray-400 cursor-pointer hover:text-gray-600"
         />
-        <MoreButton />
+        <MoreButton chatInfo={chatInfo} />
       </div>
     </div>
   );

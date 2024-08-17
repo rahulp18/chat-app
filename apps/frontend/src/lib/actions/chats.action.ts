@@ -2,11 +2,12 @@
 
 import api from "@/config/api";
 import { ApiResponse, Chat } from "@/types/index.type";
-
+import { unstable_noStore as noStore } from "next/cache";
 export const fetchAllChats = async (
   search: string
 ): Promise<{ success: boolean; message?: string; data: Chat[] }> => {
   try {
+    noStore();
     const { data } = await api.get(`/chats?search=${search}`);
     return { success: true, data };
   } catch (error: any) {
@@ -62,5 +63,26 @@ export const fetchChatDetails = async (
       message: error.response.message || "FAILED TO LOAD CHAT DETAILS",
       data: null,
     };
+  }
+};
+
+export const leaveGroupChat = async (
+  chatId: string
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const { data } = await api.delete(`/chats/group/${chatId}/leave`);
+    return { success: true, message: data.message };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+};
+export const deleteDirectChat = async (
+  chatId: string
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const { data } = await api.delete(`/chats/direct/${chatId}/leave`);
+    return { success: true, message: data.message };
+  } catch (error: any) {
+    return { success: false, message: error.message };
   }
 };

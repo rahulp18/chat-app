@@ -27,13 +27,13 @@ const ChatIdPage = async ({ params: { chatId } }: Props) => {
       </div>
       <div className="flex-1 px-4 py-1 overflow-y-auto">
         <ChatWindow
-          messages={groupChat.messages}
-          participants={groupChat.participants}
-          isGroup={true}
+          chatId={chatId}
+          participantsData={res.data.participants}
+          isGroup={res.data.isGroup}
         />
       </div>
       <div className="sticky bottom-0  px-4 py-5 shadow w-full border-t-[1px] ">
-        <BottomBar />
+        <BottomBar chatId={chatId} />
       </div>
     </div>
   );
