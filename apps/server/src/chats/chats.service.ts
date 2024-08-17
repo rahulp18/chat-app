@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Chat, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -130,5 +130,70 @@ export class ChatsService {
     });
 
     return chat;
+  }
+
+  async deleteDirectChat({
+    chatId,
+    userId,
+  }: {
+    chatId: string;
+    userId: string;
+  }) {
+    console.log(chatId);
+    const chat = await this.prisma.chat.findUnique({
+      where: {
+        id: chatId,
+      },
+      include: {
+        participants: true,
+      },
+    });
+    if (!chat || chat.participants.length > 2) {
+      throw new NotFoundException('Invalid chat id || chat not found');
+    }
+    await this.prisma.chat.delete({
+      where: {
+        id: chatId,
+      },
+    });
+
+    return { message: 'Chat deleted successfully' };
+  }
+  async leaveGroupChat({ chatId, userId }: { chatId: string; userId: string }) {
+    const chat = await this.prisma.chat.findUnique({
+      where: {
+        id: chatId,
+      },
+      include: {
+        participants: true,
+      },
+    });
+    if (!chat) {
+      throw new NotFoundException('Invalid chat id || chat not found');
+    }
+    await this.prisma.chatParticipant.delete({
+      where: {
+        userId_chatId: {
+          userId,
+          chatId,
+        },
+      },
+    });
+    const participants = await this.prisma.chatParticipant.findMany({
+      where: {
+        chatId: {
+          equals: chatId,
+        },
+      },
+    });
+    if (participants.length === 0) {
+      await this.prisma.chat.delete({
+        where: {
+          id: chatId,
+        },
+      });
+    }
+
+    return { message: 'Successfully left the chat' };
   }
 }

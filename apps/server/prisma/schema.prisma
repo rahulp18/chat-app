@@ -30,8 +30,9 @@ model Message {
   sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
   chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
-  @@unique([senderId, chatId]) // Ensure this constraint fits your logic
+ 
   @@index([chatId])
+  @@index([senderId])
 }
 
 model Chat {

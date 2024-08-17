@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -61,5 +62,19 @@ export class ChatsController {
   @Get(':id')
   getChatById(@Param() param: { id: string }) {
     return this.chatService.getChatInformation(param.id);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Delete("group/:chatId/leave")
+  deleteGroupChat(@Param() {chatId}:{chatId:string},@Request() req){
+    const userId=req.user.id;
+    return this.chatService.leaveGroupChat({chatId,userId})
+
+  }
+  @UseGuards(JwtAuthGuard)
+  @Delete("direct/:chatId/leave")
+  deleteDirectChat(@Param() {chatId}:{chatId:string},@Request() req){
+    const userId=req.user.id;
+    return this.chatService.deleteDirectChat({chatId,userId})
+
   }
 }
