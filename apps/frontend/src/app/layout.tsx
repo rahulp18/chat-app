@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import ToastProvider from "@/components/providers/toast-provider";
 import "react-toastify/dist/ReactToastify.css";
 import { UserProvider } from "@/contexts/user.context";
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["700", "400", "300"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-        <body className={inter.className}>
+        <body className={roboto.className}>
           {children}
           <ToastProvider />
         </body>

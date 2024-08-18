@@ -109,6 +109,7 @@ export class ChatsService {
             user: true,
           },
         },
+        messages: true,
       },
       orderBy: {
         updatedAt: 'desc',

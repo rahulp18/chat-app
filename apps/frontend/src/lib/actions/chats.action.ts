@@ -2,13 +2,15 @@
 
 import api from "@/config/api";
 import { ApiResponse, Chat } from "@/types/index.type";
-import { unstable_noStore as noStore } from "next/cache";
+import { unstable_noStore as noStore, revalidateTag } from "next/cache";
 export const fetchAllChats = async (
   search: string
 ): Promise<{ success: boolean; message?: string; data: Chat[] }> => {
   try {
     noStore();
-    const { data } = await api.get(`/chats?search=${search}`);
+    const { data } = await api.get(`/chats?search=${search}`, {
+      next: { tags: ["chats"] },
+    });
     return { success: true, data };
   } catch (error: any) {
     console.log(error);
@@ -21,6 +23,7 @@ export const createSingleChat = async (
   try {
     const { data } = await api.post("/chats/direct", { recipientId: userId });
 
+    revalidateTag("chats");
     return { success: true, data };
   } catch (error: any) {
     console.log(error);
@@ -37,7 +40,7 @@ export const createGroupChat = async (values: any): Promise<ApiResponse> => {
       memberIds: values.users,
       name: values.name,
     });
-
+    revalidateTag("chats");
     return { success: true, data };
   } catch (error: any) {
     console.log(error);
@@ -71,6 +74,7 @@ export const leaveGroupChat = async (
 ): Promise<{ success: boolean; message: string }> => {
   try {
     const { data } = await api.delete(`/chats/group/${chatId}/leave`);
+    revalidateTag("chats");
     return { success: true, message: data.message };
   } catch (error: any) {
     return { success: false, message: error.message };
@@ -81,6 +85,7 @@ export const deleteDirectChat = async (
 ): Promise<{ success: boolean; message: string }> => {
   try {
     const { data } = await api.delete(`/chats/direct/${chatId}/leave`);
+    revalidateTag("chats");
     return { success: true, message: data.message };
   } catch (error: any) {
     return { success: false, message: error.message };

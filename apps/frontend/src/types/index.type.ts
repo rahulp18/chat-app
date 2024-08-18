@@ -5,6 +5,7 @@ type Chat = {
   createdAt: string;
   updatedAt: string;
   participants: Participant[];
+  messages: any[];
 };
 
 type Participant = {
